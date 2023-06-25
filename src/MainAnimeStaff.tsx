@@ -48,6 +48,7 @@ const MainAnimeStaff = ({ animeId, onSelectionChange }: Props) => {
 
   useEffect(() => {
     allStaffHandler.setState([]);
+    setPagination({ current: 1, total: 1 });
   }, [animeId]);
 
   useEffect(() => {

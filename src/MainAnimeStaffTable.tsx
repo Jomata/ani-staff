@@ -66,7 +66,7 @@ const MainAnimeStaffTable = ({
                       (selected) => selected == staffRoles[0].staffId
                     )}
                   />
-                  <a href={staffRoles[0].siteUrl} target="_blank">
+                  <a href={staffRoles[0].siteUrl} target="_blank" title="anilist">
                     <span aria-label="anilist">🔗</span>
                   </a>
                 </Group>

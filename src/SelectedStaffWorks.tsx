@@ -17,6 +17,7 @@ const StaffRolesByIdsQuery = graphql(`
             staffRole
             node {
               id
+              popularity
               siteUrl
               bannerImage
               coverImage {
@@ -62,6 +63,7 @@ const SelectedStaffWorks = ({
         const bannerUrl = edge?.node?.bannerImage!;
         const coverUrl = edge?.node?.coverImage?.medium!;
         const siteUrl = edge?.node?.siteUrl!;
+        const popularity = edge?.node?.popularity!;
 
         if (animeId === ignoreAnimeId) return;
 
@@ -69,6 +71,7 @@ const SelectedStaffWorks = ({
         if (!anime) {
           anime = {
             id: animeId!,
+            popularity,
             bannerUrl,
             coverUrl,
             siteUrl,
@@ -108,7 +111,12 @@ const SelectedStaffWorks = ({
         ]}
       >
         {animeInfo
-          .sort((a, b) => b.staff.length - a.staff.length)
+          .sort((a, b) => {
+            if(b.staff.length !== a.staff.length) 
+              return b.staff.length > a.staff.length ? 1 : -1
+            else 
+              return b.popularity > a.popularity ? 1 : -1
+          })
           .map((anime) => (
             <RelatedAnimeStaffCard key={anime.id} info={anime} />
           ))}
@@ -132,7 +140,7 @@ const RelatedAnimeStaffCard = ({ info }: { info: AnimeInfoWithStaff }) => {
       <Text mt="md" mb={"sm"} weight={500}>
         {info.title}
         &nbsp;
-        <a href={info.siteUrl} target="_blank">
+        <a href={info.siteUrl} target="_blank" title="anilist">
           <span aria-label="anilist">🔗</span>
         </a>
       </Text>

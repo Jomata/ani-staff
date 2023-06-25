@@ -7,6 +7,7 @@ export interface AnimeInfo {
 }
 export interface AnimeSearchResult extends AnimeInfo {}
 export interface AnimeInfoWithStaff extends AnimeInfo {
+  popularity: number; //for sorting
   staff: StaffInfo[];
 }
 export interface StaffInfo {
