@@ -4,11 +4,13 @@ import { useDebouncedValue, useListState } from "@mantine/hooks";
 import { useEffect } from "react";
 
 export interface StaffTableProps {
+  animeId:number;
   staffData: StaffRole[];
   onSelectionChange: (selectedStaffIds: number[]) => void;
 }
 
 const MainAnimeStaffTable = ({
+  animeId,
   staffData,
   onSelectionChange,
 }: StaffTableProps) => {
@@ -27,6 +29,10 @@ const MainAnimeStaffTable = ({
   const [debouncedStaffIds] = useDebouncedValue(selectedStaffIds, 1500, {
     leading: true,
   });
+
+  useEffect(()=>{
+    selectedStaffIdsHandler.setState([])
+  },[animeId])
 
   useEffect(() => {
     onSelectionChange(debouncedStaffIds);

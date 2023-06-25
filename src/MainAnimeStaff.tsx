@@ -105,6 +105,7 @@ const MainAnimeStaff = ({ animeId, onSelectionChange }: Props) => {
         )}
       </p>
       <MainAnimeStaffTable
+        animeId={animeId}
         staffData={allStaff}
         onSelectionChange={onSelectionChange}
       />
