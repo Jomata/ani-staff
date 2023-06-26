@@ -30,7 +30,7 @@ export default function MainContainer() {
               <MainAnimeSearch
                 onAnimeSelected={(anime) => setSelectedAnime(anime)}
               />
-              <ScrollArea type="auto">
+              <ScrollArea type="auto" offsetScrollbars>
                 {selectedAnime?.id && (
                   <MainAnimeStaff
                     animeId={selectedAnime?.id}
@@ -43,7 +43,7 @@ export default function MainContainer() {
             </Stack>
           </Grid.Col>
           <Grid.Col span={8}>
-            <ScrollArea type="auto" h="100vh">
+            <ScrollArea type="auto" h="100vh" offsetScrollbars>
               {selectedAnime?.id && selectedStaffIds.length > 0 && (
                 <SelectedStaffWorks
                   staffIds={selectedStaffIds}

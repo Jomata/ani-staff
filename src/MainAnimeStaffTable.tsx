@@ -4,13 +4,15 @@ import { useDebouncedValue, useListState } from "@mantine/hooks";
 import { useEffect } from "react";
 
 export interface StaffTableProps {
-  animeId:number;
+  animeId: number;
+  filter: string;
   staffData: StaffRole[];
   onSelectionChange: (selectedStaffIds: number[]) => void;
 }
 
 const MainAnimeStaffTable = ({
   animeId,
+  filter,
   staffData,
   onSelectionChange,
 }: StaffTableProps) => {
@@ -30,13 +32,33 @@ const MainAnimeStaffTable = ({
     leading: true,
   });
 
-  useEffect(()=>{
-    selectedStaffIdsHandler.setState([])
-  },[animeId])
+  useEffect(() => {
+    selectedStaffIdsHandler.setState([]);
+  }, [animeId]);
 
   useEffect(() => {
     onSelectionChange(debouncedStaffIds);
   }, [debouncedStaffIds]);
+
+  const groupedStaffData = uniqueStaffIds.map((staffId) => {
+    const staffRoles = staffData.filter((staff) => staff.staffId === staffId);
+    const { staffName, siteUrl, image } = staffRoles[0];
+    const roles = staffRoles.map((r) => r.role);
+    return {
+      staffId,
+      staffName,
+      siteUrl,
+      image,
+      roles,
+    };
+  });
+
+  const lowerFilter = filter.toLowerCase();
+  const filteredStaffData = groupedStaffData.filter(
+    (staff) =>
+      staff.staffName.toLowerCase().includes(lowerFilter) ||
+      staff.roles.some((r) => r.toLowerCase().includes(lowerFilter))
+  );
 
   return (
     <Table>
@@ -47,37 +69,30 @@ const MainAnimeStaffTable = ({
         </tr> */}
       </thead>
       <tbody>
-        {uniqueStaffIds.map((staffId) => {
-          const staffRoles = staffData.filter(
-            (staff) => staff.staffId === staffId
-          );
-
+        {filteredStaffData.map((staff) => {
           return (
-            <tr key={staffRoles[0].edgeId}>
+            <tr key={staff.staffId}>
               <td>
                 <Group>
-                  <Avatar src={staffRoles[0].image} placeholder="" />
+                  <Avatar src={staff.image} placeholder="" />
                   <Checkbox
                     aria-label="Display other works by this person"
                     title="Display other works by this person"
-                    value={staffRoles[0].staffId}
-                    label={staffRoles[0].staffName}
+                    value={staff.staffId}
+                    label={staff.staffName}
                     onChange={(event) =>
-                      toggleStaff(
-                        staffRoles[0].staffId,
-                        event.currentTarget.checked
-                      )
+                      toggleStaff(staff.staffId, event.currentTarget.checked)
                     }
                     checked={selectedStaffIds.some(
-                      (selected) => selected == staffRoles[0].staffId
+                      (selected) => selected == staff.staffId
                     )}
                   />
-                  <a href={staffRoles[0].siteUrl} target="_blank" title="anilist">
+                  <a href={staff.siteUrl} target="_blank" title="anilist">
                     <span aria-label="anilist">🔗</span>
                   </a>
                 </Group>
                 <Text ml="sm" mt="sm">
-                  {staffRoles.map((r) => r.role).join(", ")}
+                  {staff.roles.join(", ")}
                 </Text>
               </td>
               {/* <td>{staffRoles.map((r) => r.role).join(", ")}</td> */}

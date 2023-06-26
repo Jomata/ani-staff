@@ -1,10 +1,15 @@
 import { useQuery } from "urql";
 import { graphql } from "./gql";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { StaffRole } from "./types/interfaces";
 import MainAnimeStaffTable from "./MainAnimeStaffTable";
-import { LoadingOverlay, Button } from "@mantine/core";
-import { useListState, useSetState } from "@mantine/hooks";
+import { LoadingOverlay, Button, TextInput, Group } from "@mantine/core";
+import {
+  useDebouncedValue,
+  useInputState,
+  useListState,
+  useSetState,
+} from "@mantine/hooks";
 
 export interface Props {
   animeId: number;
@@ -45,10 +50,13 @@ const MainAnimeStaff = ({ animeId, onSelectionChange }: Props) => {
     variables: { id: animeId, staffPage: pagination.current },
   });
   const [allStaff, allStaffHandler] = useListState<StaffRole>([]);
+  const [staffFilter, setStaffFilter] = useInputState("");
+  const [debouncedStaffFilter] = useDebouncedValue(staffFilter, 100);
 
   useEffect(() => {
     allStaffHandler.setState([]);
     setPagination({ current: 1, total: 1 });
+    setStaffFilter("");
   }, [animeId]);
 
   useEffect(() => {
@@ -90,22 +98,34 @@ const MainAnimeStaff = ({ animeId, onSelectionChange }: Props) => {
       <LoadingOverlay visible={staffResult?.fetching} overlayBlur={2} />
 
       {staffResult?.error && <pre>{staffResult?.error?.message}</pre>}
-      <p>
-        Loaded {pagination.current} of {pagination.total} total pages &nbsp;
-        {pagination.current < pagination.total && (
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => setPagination({ current: pagination.current + 1 })}
-            aria-label="load more info"
-            title="Load more info"
-          >
-            ➕
-          </Button>
-        )}
-      </p>
+      <Group grow>
+        <div>
+          Showing {pagination.current} of {pagination.total} pages &nbsp;
+          {pagination.current < pagination.total && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setPagination({ current: pagination.current + 1 })}
+              aria-label="load more info"
+              title="Load more info"
+            >
+              ➕
+            </Button>
+          )}
+        </div>
+        <TextInput
+          placeholder="Filter staff"
+          value={staffFilter}
+          onChange={setStaffFilter}
+          icon={<>🔎</>}
+          // rightSectionWidth={90}
+          // rightSection={rightSection}
+          // styles={{ rightSection: { pointerEvents: 'none' } }}
+        />
+      </Group>
       <MainAnimeStaffTable
         animeId={animeId}
+        filter={debouncedStaffFilter}
         staffData={allStaff}
         onSelectionChange={onSelectionChange}
       />
