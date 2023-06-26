@@ -78,6 +78,7 @@ const MainAnimeSearch = ({ onAnimeSelected }: MainAnimeSearchProps) => {
 
   return (
     <Autocomplete
+      autoFocus={true}
       mt="lg"
       icon={
         searchResult?.fetching ? <Loader variant="dots" size="sm" /> : <>🟢</>
