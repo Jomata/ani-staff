@@ -1,9 +1,15 @@
 import { useQuery } from "urql";
 import { graphql } from "./gql";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect } from "react";
 import { StaffRole } from "./types/interfaces";
 import MainAnimeStaffTable from "./MainAnimeStaffTable";
-import { LoadingOverlay, Button, TextInput, Group } from "@mantine/core";
+import {
+  LoadingOverlay,
+  Button,
+  TextInput,
+  Group,
+  ScrollArea,
+} from "@mantine/core";
 import {
   useDebouncedValue,
   useInputState,
@@ -101,17 +107,6 @@ const MainAnimeStaff = ({ animeId, onSelectionChange }: Props) => {
       <Group grow>
         <div>
           Showing {pagination.current} of {pagination.total} pages &nbsp;
-          {pagination.current < pagination.total && (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setPagination({ current: pagination.current + 1 })}
-              aria-label="load more info"
-              title="Load more info"
-            >
-              ➕
-            </Button>
-          )}
         </div>
         <TextInput
           placeholder="Filter staff"
@@ -123,12 +118,26 @@ const MainAnimeStaff = ({ animeId, onSelectionChange }: Props) => {
           // styles={{ rightSection: { pointerEvents: 'none' } }}
         />
       </Group>
-      <MainAnimeStaffTable
-        animeId={animeId}
-        filter={debouncedStaffFilter}
-        staffData={allStaff}
-        onSelectionChange={onSelectionChange}
-      />
+      <ScrollArea type="auto" offsetScrollbars h="100%">
+        <MainAnimeStaffTable
+          animeId={animeId}
+          filter={debouncedStaffFilter}
+          staffData={allStaff}
+          onSelectionChange={onSelectionChange}
+        />
+      </ScrollArea>
+      {pagination.current < pagination.total && (
+        <Button
+          bottom={"5px"}
+          size="md"
+          variant="outline"
+          onClick={() => setPagination({ current: pagination.current + 1 })}
+          aria-label="Load more staff"
+          title="Load more staff"
+        >
+          ➕
+        </Button>
+      )}
     </>
   );
 };

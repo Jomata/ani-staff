@@ -23,23 +23,22 @@ export default function MainContainer() {
 
   return (
     <Provider value={client}>
-      <Container fluid>
+      <Container style={{ overflow: "hidden" }} fluid>
         <Grid>
           <Grid.Col span={4}>
             <Stack justify="flex-start" h="100vh">
               <MainAnimeSearch
                 onAnimeSelected={(anime) => setSelectedAnime(anime)}
               />
-              <ScrollArea type="auto" offsetScrollbars>
-                {selectedAnime?.id && (
-                  <MainAnimeStaff
-                    animeId={selectedAnime?.id}
-                    onSelectionChange={(staffIds) =>
-                      setSelectedStaffIds(staffIds)
-                    }
-                  />
-                )}
-              </ScrollArea>
+
+              {selectedAnime?.id && (
+                <MainAnimeStaff
+                  animeId={selectedAnime?.id}
+                  onSelectionChange={(staffIds) =>
+                    setSelectedStaffIds(staffIds)
+                  }
+                />
+              )}
             </Stack>
           </Grid.Col>
           <Grid.Col span={8}>
