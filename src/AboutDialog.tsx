@@ -8,7 +8,7 @@ export default function AboutDialog() {
     <>
       <Dialog
         opened={opened}
-        onClose={close}
+        onClose={toggle}
         withCloseButton
         position={{ bottom: rem(45), right: rem(30) }}
       >
@@ -41,6 +41,12 @@ export default function AboutDialog() {
             make this
           </li>
           <li>
+            <a href="https://vitejs.dev/" target="_blank">
+              vite
+            </a>
+            , for making it very painless to start a frontend project
+          </li>
+          <li>
             <a href="https://www.mantine.dev" target="_blank">
               mantine
             </a>
@@ -68,7 +74,9 @@ export default function AboutDialog() {
         </ul>
       </Dialog>
       <Affix position={{ bottom: rem(10), right: rem(30) }}>
-        <Button onClick={toggle}>❔</Button>
+        <Button onClick={toggle} title={`Click to show/hide`}>
+          ❔
+        </Button>
       </Affix>
     </>
   );
