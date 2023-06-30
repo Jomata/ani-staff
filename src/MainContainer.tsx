@@ -6,6 +6,7 @@ import SelectedStaffWorks from "./SelectedStaffWorks";
 import MainAnimeSearch from "./MainAnimeSearch";
 import { AnimeSearchResult } from "./types/interfaces";
 import { useDocumentTitle } from "@mantine/hooks";
+import AboutDialog from "./AboutDialog";
 
 const client = new Client({
   url: "https://graphql.anilist.co",
@@ -23,6 +24,7 @@ export default function MainContainer() {
 
   return (
     <Provider value={client}>
+      <AboutDialog />
       <Container style={{ overflow: "hidden" }} fluid>
         <Grid>
           <Grid.Col span={4}>
