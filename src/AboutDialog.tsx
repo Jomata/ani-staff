@@ -1,4 +1,4 @@
-import { Affix, rem, Button, Modal, Dialog } from "@mantine/core";
+import { Affix, rem, Button, Dialog } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
 export default function AboutDialog() {
