@@ -105,9 +105,7 @@ const MainAnimeStaff = ({ animeId, onSelectionChange }: Props) => {
 
       {staffResult?.error && <pre>{staffResult?.error?.message}</pre>}
       <Group grow>
-        <div>
-          Showing {pagination.current} of {pagination.total} pages &nbsp;
-        </div>
+        <div>&nbsp;</div>
         <TextInput
           placeholder="Filter staff"
           value={staffFilter}
@@ -126,18 +124,18 @@ const MainAnimeStaff = ({ animeId, onSelectionChange }: Props) => {
           onSelectionChange={onSelectionChange}
         />
       </ScrollArea>
-      {pagination.current < pagination.total && (
-        <Button
-          bottom={"5px"}
-          size="md"
-          variant="outline"
-          onClick={() => setPagination({ current: pagination.current + 1 })}
-          aria-label="Load more staff"
-          title="Load more staff"
-        >
-          ➕
-        </Button>
-      )}
+
+      <Button
+        bottom={"5px"}
+        size="md"
+        variant="outline"
+        onClick={() => setPagination({ current: pagination.current + 1 })}
+        aria-label="Load more staff"
+        title="Load more staff"
+        disabled={pagination.current >= pagination.total}
+      >
+        ➕
+      </Button>
     </>
   );
 };
