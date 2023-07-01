@@ -33,6 +33,7 @@ const AnimeSearchByNameQuery = graphql(`
           native
           userPreferred
         }
+        synonyms
       }
     }
   }
@@ -47,20 +48,18 @@ const MainAnimeSearch = ({ onAnimeSelected }: MainAnimeSearchProps) => {
     pause: debouncedQuery.length == 0,
   });
 
-  //   if (searchResult.fetching) {
-  //     return <Loader />;
-  //   }
-
-  //   if (searchResult.error) {
-  //     return <Text color="red">Error occurred while fetching data</Text>;
-  //   }
-
   const options =
     searchResult.data?.Page?.media
       ?.flatMap((media) =>
-        [...Object.values(media?.title!)]
+        [
+          media?.title?.english,
+          media?.title?.native,
+          media?.title?.romaji,
+          ...media?.synonyms!,
+        ]
+          .flatMap((title) => (title ? [title] : [])) //filtering out nulls (there shouldn't be any though)
           .filter((title) =>
-            title?.toLowerCase().includes(searchQuery.toLowerCase())
+            title.toLowerCase().includes(searchQuery.toLowerCase())
           )
           .slice(0, 1) //grab the first match only
           .map((title) => ({
@@ -88,7 +87,6 @@ const MainAnimeSearch = ({ onAnimeSelected }: MainAnimeSearchProps) => {
       defaultValue={searchQuery}
       onChange={setSearchQuery}
       onItemSubmit={(item) => {
-        // console.log(item);
         onAnimeSelected(item as unknown as AnimeSearchResult);
       }}
       data={options}
@@ -99,8 +97,6 @@ const MainAnimeSearch = ({ onAnimeSelected }: MainAnimeSearchProps) => {
 };
 
 interface ItemProps extends SelectItemProps {
-  // color: MantineColor;
-  // description: string;
   value: string;
   title: string;
   siteUrl: string;
@@ -116,7 +112,6 @@ const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
     <div ref={ref} {...others}>
       <Group noWrap>
         <Avatar src={coverUrl} />
-
         <div>
           <Text>{value}</Text>
           {title !== value && (
